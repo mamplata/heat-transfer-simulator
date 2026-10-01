@@ -70,3 +70,15 @@ cd frontend
 npm test -- --watch=false
 npm run build
 ```
+
+
+## Browser test
+
+Install Playwright's Chromium browser once, then run the end-to-end test from `frontend`:
+
+```bash
+npx playwright install chromium
+npm run e2e
+```
+
+The test starts both services with `dev.sh` when they are not already running.
