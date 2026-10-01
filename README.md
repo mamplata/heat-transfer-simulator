@@ -20,24 +20,13 @@ This is an idealized conduction model. It does not include inside/outside surfac
 
 Requirements: Java 21 and Node.js/npm.
 
-Start the backend in one terminal:
+From the repository root, run both services with one command:
 
 ```bash
-cd backend
-./mvnw spring-boot:run
+./dev.sh
 ```
 
-It listens on `http://localhost:5005`.
-
-Start the frontend in another terminal:
-
-```bash
-cd frontend
-npm install
-npm start
-```
-
-Open `http://localhost:4200`. The frontend sends simulations to `http://localhost:5005/api/simulations`.
+The script installs frontend dependencies on the first run if needed, starts the backend on `http://localhost:5005` and frontend on `http://localhost:4200`, and stops both when you press Ctrl+C.
 
 ## API
 

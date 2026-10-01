@@ -34,12 +34,12 @@
         </div>
         <button type="button" class="add-layer" (click)="addLayer()">＋ Add a layer</button>
         <p class="hint">Thermal conductivity describes how readily heat passes through a material. Lower values insulate better.</p>
-        <button class="submit" type="submit" [disabled]="loading">{{ loading ? 'Calculating…' : 'Calculate heat loss' }} <span>↗</span></button>
-        @if (error) { <p class="error" role="alert">{{ error }}</p> }
+        <button class="submit" type="submit" [disabled]="loading()">{{ loading() ? 'Calculating…' : 'Calculate heat loss' }} <span>↗</span></button>
+        @if (error()) { <p class="error" role="alert">{{ error() }}</p> }
       </form>
 
       <aside class="result-panel" aria-live="polite">
-        @if (result; as r) {
+        @if (result(); as r) {
           <p class="eyebrow">YOUR RESULTS</p><h2>Heat moving<br><em>through the wall.</em></h2>
           <div class="primary-result"><span>HEAT FLOW RATE</span><strong>{{ r.heatFlowRateW | number:'1.1-1' }}<small>W</small></strong><p>Across {{ wallAreaM2 | number:'1.0-2' }} m² of wall</p></div>
           <div class="metrics"><div><span>HEAT FLUX</span><strong>{{ r.heatFluxWPerM2 | number:'1.1-2' }} <small>W/m²</small></strong></div><div><span>TOTAL RESISTANCE</span><strong>{{ r.totalResistanceM2KPerW | number:'1.2-2' }} <small>m²K/W</small></strong></div></div>
