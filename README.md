@@ -16,6 +16,13 @@ Conductivity is in W/(m·K), thickness in meters, temperatures in °C, and area 
 
 This is an idealized conduction model. It does not include inside/outside surface resistance, air gaps, thermal bridges, moisture, radiation, convection, or changing conditions. Results are estimates, not a full building-energy analysis.
 
+## Tech stack
+
+- **Frontend:** Angular 21, TypeScript 5.9, RxJS 7.8, SCSS
+- **Backend:** Java 21, Spring Boot 4.1, Spring MVC, Bean Validation
+- **Testing:** Vitest for frontend unit tests, JUnit for backend tests, Playwright for browser tests
+- **Package/build tools:** npm 10.8, Maven Wrapper
+
 ## Run locally
 
 Requirements: Java 21 and Node.js/npm.
