@@ -23,8 +23,7 @@ interface SimulationResult {
 @Component({
   selector: 'app-root',
   imports: [FormsModule, DecimalPipe],
-  templateUrl: './app.html',
-  styleUrl: './app.scss'
+  templateUrl: './app.html'
 })
 export class App {
   indoorTemperatureC = 21;
@@ -40,6 +39,13 @@ export class App {
 
   addLayer() {
     this.layers.push({ name: '', thicknessMeters: 0.1, conductivityWPerMeterKelvin: 0.5 });
+  }
+
+  temperatureColor(temperature: number) {
+    const low = Math.min(this.indoorTemperatureC, this.outdoorTemperatureC);
+    const range = Math.abs(this.indoorTemperatureC - this.outdoorTemperatureC);
+    const fraction = range === 0 ? 0.5 : (temperature - low) / range;
+    return `hsl(${205 - 185 * fraction} 55% 75%)`;
   }
 
   async simulate() {

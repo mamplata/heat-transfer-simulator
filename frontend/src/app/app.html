@@ -43,10 +43,17 @@
           <p class="eyebrow">YOUR RESULTS</p><h2>Heat moving<br><em>through the wall.</em></h2>
           <div class="primary-result"><span>HEAT FLOW RATE</span><strong>{{ r.heatFlowRateW | number:'1.1-1' }}<small>W</small></strong><p>Across {{ wallAreaM2 | number:'1.0-2' }} m² of wall</p></div>
           <div class="metrics"><div><span>HEAT FLUX</span><strong>{{ r.heatFluxWPerM2 | number:'1.1-2' }} <small>W/m²</small></strong></div><div><span>TOTAL RESISTANCE</span><strong>{{ r.totalResistanceM2KPerW | number:'1.2-2' }} <small>m²K/W</small></strong></div></div>
-          <div class="temperature-list"><div class="temp-head"><span>LAYER TEMPERATURES</span><span>°C</span></div>
-            @for (layer of r.layers; track $index) {
-              <div class="temp-row"><span>{{ layer.name }}</span><strong>{{ layer.startTemperatureC | number:'1.1-1' }}° <b>→</b> {{ layer.endTemperatureC | number:'1.1-1' }}°</strong></div>
-            }
+          <div class="wall-visual" aria-label="Wall cross-section showing temperature through each layer">
+            <div class="wall-ends"><span>INDOOR · {{ r.layers[0].startTemperatureC | number:'1.1-1' }}°C</span><span>OUTDOOR · {{ r.layers[r.layers.length - 1].endTemperatureC | number:'1.1-1' }}°C</span></div>
+            <div class="wall-stack">
+              @for (layer of r.layers; track $index; let i = $index) {
+                @if (i > 0) { <span class="wall-arrow" aria-hidden="true">→</span> }
+                <div class="wall-slice" [style.flex-grow]="layers[i].thicknessMeters" [style.background]="temperatureColor((layer.startTemperatureC + layer.endTemperatureC) / 2)" [title]="layer.name + ': ' + layer.startTemperatureC + '°C to ' + layer.endTemperatureC + '°C'">
+                  <strong>{{ layer.name }}</strong><span>{{ layers[i].thicknessMeters }} m</span><small>{{ layer.startTemperatureC | number:'1.1-1' }}° → {{ layer.endTemperatureC | number:'1.1-1' }}°</small>
+                </div>
+              }
+            </div>
+            <div class="heat-direction"><span>HEAT FLOW</span><span>→</span><span>{{ r.heatFluxWPerM2 | number:'1.1-2' }} W/m²</span></div>
           </div>
           <p class="model-note">Steady state estimate. Surface films, air gaps, and thermal bridges are not included.</p>
         } @else {
