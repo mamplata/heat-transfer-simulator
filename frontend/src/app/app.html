@@ -1,0 +1,59 @@
+<div class="shell">
+  <header class="topbar">
+    <a class="brand" href="/" aria-label="Thermo home"><span class="brand-mark">T</span>thermo<span class="brand-light">/lab</span></a>
+    <span class="status"><i></i> STEADY STATE MODEL</span>
+  </header>
+
+  <main>
+    <section class="intro">
+      <p class="eyebrow">BUILDING ENVELOPE · 01</p>
+      <h1>Where does<br><em>the heat go?</em></h1>
+      <p class="lede">Model heat loss through a layered wall. Set your conditions and materials to see how each layer performs.</p>
+    </section>
+
+    <div class="workspace">
+      <form class="panel inputs" (ngSubmit)="simulate()">
+        <div class="panel-heading"><div><span class="step">01</span><h2>Conditions</h2></div><span class="unit-note">YOUR ROOM</span></div>
+        <div class="field-grid">
+          <label>Indoor temperature <span>°C</span><input type="number" name="indoor" [(ngModel)]="indoorTemperatureC" required step="any"></label>
+          <label>Outdoor temperature <span>°C</span><input type="number" name="outdoor" [(ngModel)]="outdoorTemperatureC" required step="any"></label>
+          <label class="area-field">Wall area <span>m²</span><input type="number" name="area" [(ngModel)]="wallAreaM2" required min="0.001" step="any"></label>
+        </div>
+
+        <div class="panel-heading layers-heading"><div><span class="step">02</span><h2>Wall layers</h2></div><span class="unit-note">INSIDE → OUTSIDE</span></div>
+        <div class="layer-list">
+          @for (layer of layers; track $index; let i = $index) {
+            <div class="layer-row">
+              <span class="layer-index">0{{ i + 1 }}</span>
+              <label class="material">Material<input [name]="'name' + i" [(ngModel)]="layer.name" placeholder="e.g. Brick" required></label>
+              <label>Thickness <span>m</span><input type="number" [name]="'thickness' + i" [(ngModel)]="layer.thicknessMeters" min="0.001" step="any" required></label>
+              <label>Conductivity <span>W/m·K</span><input type="number" [name]="'conductivity' + i" [(ngModel)]="layer.conductivityWPerMeterKelvin" min="0.001" step="any" required></label>
+              <button class="remove" type="button" (click)="layers.splice(i, 1)" [disabled]="layers.length === 1" [attr.aria-label]="'Remove ' + (layer.name || 'layer')">×</button>
+            </div>
+          }
+        </div>
+        <button type="button" class="add-layer" (click)="addLayer()">＋ Add a layer</button>
+        <p class="hint">Thermal conductivity describes how readily heat passes through a material. Lower values insulate better.</p>
+        <button class="submit" type="submit" [disabled]="loading">{{ loading ? 'Calculating…' : 'Calculate heat loss' }} <span>↗</span></button>
+        @if (error) { <p class="error" role="alert">{{ error }}</p> }
+      </form>
+
+      <aside class="result-panel" aria-live="polite">
+        @if (result; as r) {
+          <p class="eyebrow">YOUR RESULTS</p><h2>Heat moving<br><em>through the wall.</em></h2>
+          <div class="primary-result"><span>HEAT FLOW RATE</span><strong>{{ r.heatFlowRateW | number:'1.1-1' }}<small>W</small></strong><p>Across {{ wallAreaM2 | number:'1.0-2' }} m² of wall</p></div>
+          <div class="metrics"><div><span>HEAT FLUX</span><strong>{{ r.heatFluxWPerM2 | number:'1.1-2' }} <small>W/m²</small></strong></div><div><span>TOTAL RESISTANCE</span><strong>{{ r.totalResistanceM2KPerW | number:'1.2-2' }} <small>m²K/W</small></strong></div></div>
+          <div class="temperature-list"><div class="temp-head"><span>LAYER TEMPERATURES</span><span>°C</span></div>
+            @for (layer of r.layers; track $index) {
+              <div class="temp-row"><span>{{ layer.name }}</span><strong>{{ layer.startTemperatureC | number:'1.1-1' }}° <b>→</b> {{ layer.endTemperatureC | number:'1.1-1' }}°</strong></div>
+            }
+          </div>
+          <p class="model-note">Steady state estimate. Surface films, air gaps, and thermal bridges are not included.</p>
+        } @else {
+          <div class="empty-result"><span class="heat-icon">↗</span><p class="eyebrow">READY WHEN YOU ARE</p><h2>Your results<br><em>will appear here.</em></h2><p>Enter your wall details and calculate to see heat flow, resistance, and the temperature drop across each layer.</p><div class="formula">q = ΔT / R<sub>total</sub></div></div>
+        }
+      </aside>
+    </div>
+  </main>
+  <footer><span>THERMO/LAB</span><span>1D CONDUCTION MODEL</span></footer>
+</div>
